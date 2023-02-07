@@ -22,6 +22,22 @@ def post_animal():
     result = run_statement("CALL post_animal(?)", [animal_name])
     if result == None:
         return "Successfully added animal."
+    # I have a Unique constraint on animal.name in db
+    elif "Duplicate entry" in result:
+        return "This animal name has already been recorded, please enter a unique animal name."
+
+# Patch Request for Endpoint
+@app.patch('/api/animals')
+def patch_animal():
+    new_animal_name = request.json.get('newAnimalName')
+    current_animal_name = request.json.get('currentAnimalName')
+    if current_animal_name == None:
+        return "You must specify the animal you are updating."
+    if new_animal_name == None:
+        return "You must specify the updated animal name."
+    result = run_statement("CALL patch_animal(?, ?)", [new_animal_name, current_animal_name])
+    if result == None:
+        return "Successfully updated animal name."
     else:
         return result
 
