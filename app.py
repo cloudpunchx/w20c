@@ -41,4 +41,16 @@ def patch_animal():
     else:
         return result
 
+#Delete Request for Endpoint
+@app.delete('/api/animals')
+def delete_animal():
+    animal_name = request.json.get('animalName')
+    if animal_name == None:
+        return "You must specify an animal name"
+    result = run_statement("CALL delete_animal(?)", [animal_name])
+    if result == None:
+        return "Successfully deleted animal."
+    else:
+        return "Unable to delete animal {}.".format(animal_name)
+
 app.run(debug = True)
